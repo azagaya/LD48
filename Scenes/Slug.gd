@@ -88,14 +88,18 @@ func _on_AttackArea_body_exited(_body):
 
 
 func _on_Area2D_area_entered(_area):
+	if state == STATES.DIE: return
 	$StateAnimation.play("MouseOver")
 
 
 func _on_Area2D_area_exited(_area):
+	if state == STATES.DIE : return
 	$StateAnimation.play("MouseOut")
 
 func take_damage(damage, _source = null):
+	if health <= 0: return
 	health -= damage
 	$EmphasisAnimation.play("Damaged")
 	if health <= 0:
 		self.state = STATES.DIE
+		$StateAnimation.play("MouseOut")
