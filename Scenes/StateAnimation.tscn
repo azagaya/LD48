@@ -1,0 +1,57 @@
+[gd_scene load_steps=4 format=2]
+
+[sub_resource type="Animation" id=7]
+resource_name = "Detected"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material:shader_param/outline_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 0, 0, 0 ), Color( 1, 0, 0, 1 ), Color( 1, 0, 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "MouseOut"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material:shader_param/outline_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 0, 0.501961 ), Color( 1, 0, 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "MouseOver"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material:shader_param/outline_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 0, 0, 0 ), Color( 1, 1, 0, 0.501961 ) ]
+}
+
+[node name="StateAnimation" type="AnimationPlayer"]
+anims/Detected = SubResource( 7 )
+anims/MouseOut = SubResource( 8 )
+anims/MouseOver = SubResource( 9 )

@@ -1,0 +1,135 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Assets/Bullet.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Bat.png" type="Texture" id=2]
+[ext_resource path="res://Scenes/Bat.gd" type="Script" id=3]
+[ext_resource path="res://Scenes/StateAnimation.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/EmphasisAnimation.tscn" type="PackedScene" id=5]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+render_mode unshaded;
+ 
+uniform float width : hint_range(0.0, 16.0);
+uniform vec4 outline_color : hint_color;
+uniform vec4 emphasis_color : hint_color;
+uniform float emphasis_amout : hint_range(0.0, 1.0);
+ 
+void fragment()
+{
+    vec2 size = vec2(width) / vec2(textureSize(TEXTURE, 0));
+   
+    vec4 sprite_color = texture(TEXTURE, UV);
+	
+	sprite_color.rgb = mix(sprite_color.rgb, emphasis_color.rgb, emphasis_amout);
+	vec4 o_color = outline_color;
+	o_color.rgb = mix(o_color.rgb, emphasis_color.rgb, emphasis_amout);
+   
+    float alpha = sprite_color.a;
+    alpha += texture(TEXTURE, UV + vec2(0.0, -size.y)).a;
+    alpha += texture(TEXTURE, UV + vec2(size.x, 0.0)).a;
+    alpha += texture(TEXTURE, UV + vec2(0.0, size.y)).a;
+    alpha += texture(TEXTURE, UV + vec2(-size.x, 0.0)).a;
+   
+    vec3 final_color = mix(o_color.rgb, sprite_color.rgb, sprite_color.a);
+    COLOR = vec4(final_color, clamp(alpha, 0.0, 1.0));
+	if (COLOR == vec4(o_color.rgb, 1.0)){
+		COLOR.a = o_color.a;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = SubResource( 1 )
+shader_param/width = 1.0
+shader_param/outline_color = Color( 1, 0, 0, 0 )
+shader_param/emphasis_color = Color( 1, 1, 1, 1 )
+shader_param/emphasis_amout = 0.0
+
+[sub_resource type="Animation" id=3]
+length = 0.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="CircleShape2D" id=4]
+radius = 5.0
+
+[sub_resource type="CircleShape2D" id=5]
+radius = 96.0469
+
+[sub_resource type="CircleShape2D" id=6]
+radius = 8.0
+
+[sub_resource type="CircleShape2D" id=10]
+
+[node name="Bat" type="KinematicBody2D"]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 2 )
+position = Vector2( 0, -24 )
+texture = ExtResource( 2 )
+hframes = 4
+
+[node name="Sprite2" type="Sprite" parent="."]
+modulate = Color( 0, 0, 0, 1 )
+scale = Vector2( 0.75, 0.5 )
+texture = ExtResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Idle"
+anims/Idle = SubResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 4 )
+
+[node name="DetectionArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+shape = SubResource( 5 )
+
+[node name="Area2D" type="Area2D" parent="."]
+visible = false
+position = Vector2( 0, -24 )
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 6 )
+
+[node name="StateAnimation" parent="." instance=ExtResource( 4 )]
+
+[node name="HitBox" type="Area2D" parent="."]
+visible = false
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource( 10 )
+
+[node name="AttackTimer" type="Timer" parent="."]
+
+[node name="EmphasisAnimation" parent="." instance=ExtResource( 5 )]
+
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_DetectionArea_body_entered"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_Area2D_area_exited"]
+[connection signal="body_entered" from="HitBox" to="." method="_on_HitBox_body_entered"]
+[connection signal="body_exited" from="HitBox" to="." method="_on_HitBox_body_exited"]
+[connection signal="timeout" from="AttackTimer" to="." method="_on_AttackTimer_timeout"]
