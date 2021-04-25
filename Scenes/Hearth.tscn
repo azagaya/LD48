@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Assets/hearth.png" type="Texture" id=1]
+[ext_resource path="res://Scenes/Hearth.gd" type="Script" id=2]
+
+[node name="Hearth" type="Sprite"]
+texture = ExtResource( 1 )
+hframes = 2
+script = ExtResource( 2 )

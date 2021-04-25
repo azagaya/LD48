@@ -68,6 +68,8 @@ func _physics_process(_delta):
 			pass
 
 func _on_DetectionArea_body_entered(_body):
+	if state == STATES.DIE:
+		return
 	target = _body
 	$StateAnimation.play("Detected")
 
@@ -101,5 +103,7 @@ func take_damage(damage, _source = null):
 	health -= damage
 	$EmphasisAnimation.play("Damaged")
 	if health <= 0:
+		Events.emit_signal("enemy_died")
+		global_position = global_position.snapped(Vector2.ONE)
 		self.state = STATES.DIE
 		$StateAnimation.play("MouseOut")

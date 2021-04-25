@@ -1,11 +1,13 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Assets/Slug.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Slug.gd" type="Script" id=2]
 [ext_resource path="res://Scenes/StateAnimation.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/EmphasisAnimation.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/Slug_n.png" type="Texture" id=5]
+[ext_resource path="res://SFX/slug-spit.ogg" type="AudioStream" id=6]
 
-[sub_resource type="Shader" id=7]
+[sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
 varying float VAR1;
 
@@ -58,16 +60,16 @@ void light()
 	LIGHT *= 1.0;
 }"
 
-[sub_resource type="ShaderMaterial" id=8]
-shader = SubResource( 7 )
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = SubResource( 1 )
 shader_param/width = 1.0
 shader_param/outline_color = Color( 1, 0, 0, 0 )
 shader_param/emphasis_color = Color( 1, 1, 1, 1 )
 shader_param/emphasis_amout = 0.0
 shader_param/detail_color = Color( 0.721569, 0.254902, 0.176471, 1 )
 
-[sub_resource type="Animation" id=1]
-resource_name = "Attack"
+[sub_resource type="Animation" id=3]
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -106,8 +108,20 @@ tracks/2/keys = {
 "method": "shoot"
 } ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath("Spit:playing")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.4 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=4]
 resource_name = "Death"
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame_coords")
@@ -122,7 +136,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 2 ) ]
 }
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=5]
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -136,7 +150,7 @@ tracks/0/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=6]
 length = 0.5
 loop = true
 tracks/0/type = "value"
@@ -164,28 +178,28 @@ tracks/1/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="CircleShape2D" id=4]
+[sub_resource type="CircleShape2D" id=7]
 radius = 95.6347
 
-[sub_resource type="RectangleShape2D" id=5]
+[sub_resource type="RectangleShape2D" id=8]
 extents = Vector2( 10, 3 )
 
-[sub_resource type="CircleShape2D" id=6]
+[sub_resource type="CircleShape2D" id=9]
 radius = 63.9062
 
-[sub_resource type="CapsuleShape2D" id=9]
+[sub_resource type="CapsuleShape2D" id=10]
 radius = 4.0
 height = 14.0
 
 [node name="Slug" type="KinematicBody2D"]
 collision_layer = 4
-collision_mask = 0
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
-material = SubResource( 8 )
+material = SubResource( 2 )
 position = Vector2( 4, -4 )
 texture = ExtResource( 1 )
+normal_map = ExtResource( 5 )
 hframes = 7
 vframes = 3
 frame = 11
@@ -195,21 +209,22 @@ position = Vector2( 3, -10 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "Idle"
-anims/Attack = SubResource( 1 )
-anims/Death = SubResource( 10 )
-anims/Idle = SubResource( 2 )
-anims/Walk = SubResource( 3 )
+anims/Attack = SubResource( 3 )
+anims/Death = SubResource( 4 )
+anims/Idle = SubResource( 5 )
+anims/Walk = SubResource( 6 )
 
 [node name="DetectionArea" type="Area2D" parent="."]
+visible = false
 collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
-shape = SubResource( 4 )
+shape = SubResource( 7 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
-shape = SubResource( 5 )
+shape = SubResource( 8 )
 
 [node name="AttackArea" type="Area2D" parent="."]
 visible = false
@@ -217,7 +232,7 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
-shape = SubResource( 6 )
+shape = SubResource( 9 )
 
 [node name="StateAnimation" parent="." instance=ExtResource( 3 )]
 
@@ -230,7 +245,15 @@ collision_mask = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2( 0, -4 )
 rotation = 1.57079
-shape = SubResource( 9 )
+shape = SubResource( 10 )
+
+[node name="Spit" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )
+attenuation = 0.392292
+
+[node name="Move" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )
+max_distance = 400.0
 
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_DetectionArea_body_entered"]
 [connection signal="body_entered" from="AttackArea" to="." method="_on_AttackArea_body_entered"]

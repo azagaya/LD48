@@ -7,7 +7,9 @@ var speed := 350.0
 var damage := 1.0
 
 func _ready():
-	pass
+	var sfs := $AudioStreamPlayer2D.duplicate()
+	get_parent().add_child(sfs)
+	sfs.playing = true
 
 
 func _process(delta):
@@ -31,5 +33,7 @@ func destroy():
 	$Sprite2.hide()
 	$Particles2D2.emitting = false
 	$Particles2D.emitting = true
+	$Tween.interpolate_property($Light2D, "energy", 1.0, 0.0, 0.75)
+	$Tween.start()
 	yield(get_tree().create_timer(0.75),"timeout")
 	queue_free()

@@ -1,0 +1,85 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Scenes/Torch.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/Levels/BaseLevel.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/Sedah_n.png" type="Texture" id=3]
+[ext_resource path="res://Assets/EmptyLantern.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Sedah.png" type="Texture" id=5]
+[ext_resource path="res://Assets/EmptyLantern_n.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Diary.png" type="Texture" id=7]
+[ext_resource path="res://Scenes/Levels/EndingArea.gd" type="Script" id=8]
+[ext_resource path="res://Scenes/Dialog.tscn" type="PackedScene" id=9]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 26, 13 )
+
+[node name="Level7" instance=ExtResource( 2 )]
+
+[node name="Floor" parent="." index="0"]
+tile_data = PoolIntArray( -131075, 0, 0, -131074, 0, 1, -131073, 0, 1, -196608, 0, 1, -196607, 0, 2, -196606, 0, 4, -65539, 0, 65536, -65538, 0, 65538, -65537, 0, 65538, -131072, 0, 65538, -131071, 0, 65538, -131070, 0, 65540, -3, 0, 65536, -2, 0, 65538, -1, 0, 65539, -65536, 0, 65538, -65535, 0, 65537, -65534, 0, 65540, 65533, 0, 65536, 65534, 0, 65539, 65535, 0, 65537, 0, 0, 65537, 1, 0, 65537, 2, 0, 65540, 131069, 0, 65536, 131070, 0, 65538, 131071, 0, 65537, 65536, 0, 65537, 65537, 0, 65537, 65538, 0, 65540, 196605, 0, 131072, 196606, 0, 131074, 196607, 0, 131074, 131072, 0, 131074, 131073, 0, 131075, 131074, 0, 131076 )
+
+[node name="Sprite3" type="Sprite" parent="Floor" index="0"]
+position = Vector2( 16, -46 )
+texture = ExtResource( 7 )
+
+[node name="Stairs" parent="Floor" index="1"]
+position = Vector2( -498, -259 )
+
+[node name="Sprite2" type="Sprite" parent="Floor" index="2"]
+position = Vector2( -2, -46 )
+texture = ExtResource( 5 )
+normal_map = ExtResource( 3 )
+
+[node name="Walls" parent="YSort" index="0"]
+tile_data = PoolIntArray( -131075, 0, 0, -131074, 0, 1, -131073, 0, 131076, -196608, 0, 131076, -196607, 0, 1, -196606, 0, 2, -65539, 0, 65536, -65538, 0, 196612, -65537, 0, 196612, -131072, 0, 196612, -131071, 0, 196612, -131070, 0, 65538, -3, 0, 65536, -2, 0, 196612, -1, 0, 196612, -65536, 0, 196612, -65535, 0, 196612, -65534, 0, 65538, 65533, 0, 65536, 65534, 0, 196612, 65535, 0, 196612, 0, 0, 196612, 1, 0, 196612, 2, 0, 65538, 131069, 0, 65536, 131070, 0, 196612, 131071, 0, 196612, 65536, 0, 196612, 65537, 0, 196612, 65538, 0, 65538, 196605, 0, 131072, 196606, 0, 131073, 196607, 0, 131073, 131072, 0, 131073, 131073, 0, 131073, 131074, 0, 131074 )
+
+[node name="Character" parent="YSort" index="1"]
+position = Vector2( 11, 28 )
+
+[node name="Torch" parent="YSort" index="2" instance=ExtResource( 1 )]
+position = Vector2( -65, -52 )
+
+[node name="Torch2" parent="YSort" index="3" instance=ExtResource( 1 )]
+position = Vector2( -64, 77 )
+
+[node name="Torch3" parent="YSort" index="4" instance=ExtResource( 1 )]
+position = Vector2( 69, 77 )
+
+[node name="Torch4" parent="YSort" index="5" instance=ExtResource( 1 )]
+position = Vector2( 69, -52 )
+
+[node name="Sprite" type="Sprite" parent="YSort" index="6"]
+position = Vector2( -24, -38 )
+texture = ExtResource( 4 )
+normal_map = ExtResource( 6 )
+offset = Vector2( 0, -13 )
+
+[node name="CanvasModulate" parent="." index="2"]
+color = Color( 0.117647, 0.117647, 0.117647, 1 )
+
+[node name="Intro" parent="CanvasLayer" index="2"]
+intro = "I'm reaching to my limit. I hope the last level is near or I will become insane.
+
+[right]Diary of Sedah
+Chapter 7[/right]"
+
+[node name="EndingArea" type="Area2D" parent="." index="5"]
+position = Vector2( -1, -45 )
+collision_layer = 0
+collision_mask = 2
+script = ExtResource( 8 )
+dialog = "[center]An empty Sacred Lantern, I thought there was only one.
+There is also a Diary which reads \"Sedah\" on its cover. Who is Sedah?[/center]"
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="EndingArea" index="0"]
+
+[node name="Dialog" parent="EndingArea/CanvasLayer2" index="0" instance=ExtResource( 9 )]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EndingArea" index="1"]
+shape = SubResource( 1 )
+
+[connection signal="next_level" from="Floor/Stairs" to="." method="next_level"]
+[connection signal="health_changed" from="YSort/Character" to="CanvasLayer/HUD" method="health_changed"]
+[connection signal="body_entered" from="EndingArea" to="EndingArea" method="_on_EndingArea_body_entered"]
+[connection signal="body_exited" from="EndingArea" to="EndingArea" method="_on_EndingArea_body_exited"]

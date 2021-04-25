@@ -2,7 +2,11 @@ extends KinematicBody2D
 
 enum STATES {IDLE, WALK, ATTACK, DIE}
 
-export var health := 5.0
+signal dead
+signal health_changed(health)
+
+export var health := 5.0 setget set_health
+export var lantern_max_time := -1
 
 var speed := 75.0
 var state : int = STATES.IDLE setget set_state
@@ -10,13 +14,29 @@ var prev_state : int = STATES.IDLE
 
 var bullet_scene := preload("res://Scenes/Bullet.tscn")
 
+onready var habilities := Events.player_habilities
+
 onready var sprite := $Sprite
 onready var animation_player := $AnimationPlayer
 onready var collision_shape := $CollisionShape2D
 onready var shoot_position := $Sprite/ShootPosition
 
+func set_health(h):
+	health = h
+	emit_signal("health_changed", health)
+
 func _ready():
 	self.state = STATES.IDLE
+	Events.connect("habilities_changed",self, "update_habilities")
+	Events.connect("enemy_died",self, "fill_lantern")
+	if lantern_max_time > 0:
+		$LightFuel.start(lantern_max_time)
+		
+func fill_lantern():
+	$LightFuel.start( lantern_max_time)
+	
+func update_habilities():
+	habilities = Events.player_habilities
 	
 func set_state(new_state : int):
 	# exit state
@@ -41,6 +61,7 @@ func set_state(new_state : int):
 			animation_player.current_animation = "Attack"
 		STATES.DIE:
 			animation_player.current_animation = "Death"
+			emit_signal("dead")
 		
 func _physics_process(delta):
 	var direction := Vector2.ZERO
@@ -48,20 +69,20 @@ func _physics_process(delta):
 		STATES.IDLE:
 			if _get_movement_direction().length() > 0:
 				self.state = STATES.WALK
-			if Input.is_action_pressed("Attack"):
+			if Input.is_action_pressed("Attack") and "Melee" in habilities:
 				self.state = STATES.ATTACK
 		STATES.WALK:
 			direction = _get_movement_direction()
 			if direction.length() == 0:
 				self.state = STATES.IDLE
 			
-			if Input.is_action_pressed("Attack"):
+			if Input.is_action_pressed("Attack") and "Melee" in habilities:
 				self.state = STATES.ATTACK
 		STATES.ATTACK:
 			
 			if Input.is_action_just_released("Attack"):
 				self.state = STATES.IDLE
-			elif Input.is_action_just_pressed("Shoot") and not animation_player.is_playing():
+			elif Input.is_action_just_pressed("Shoot") and not animation_player.is_playing() and "Shoot" in habilities:
 				var bullet = bullet_scene.instance()
 				bullet.direction = shoot_position.global_position.direction_to(MouseAim.get_target_position())
 				get_parent().add_child(bullet)
@@ -88,8 +109,18 @@ func _get_movement_direction() -> Vector2:
 		Input.get_action_strength("Down") - Input.get_action_strength("Up")
 	).normalized()
 
+func melee():
+	for enemy in $MeleeHitBox.get_overlapping_bodies():
+		enemy.take_damage(2)
+
 func take_damage(damage, source = null):
 	if health <= 0: return
-	health -= damage
+	self.health -= damage
+	$EmphasisAnimator.play("Damage")
+	$Camera2D.shake()
 	if health <= 0:
 		self.state = STATES.DIE
+
+
+func _on_LightFuel_timeout():
+	take_damage(INF)

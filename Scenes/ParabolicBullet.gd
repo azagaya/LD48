@@ -23,6 +23,10 @@ func _physics_process(delta):
 		
 func destroy():
 	speed = 0
+	set_process(false)
+	set_physics_process(false)
+	set_deferred("monitoring",false)
+	set_deferred("monitorable", false)
 	$Sprite.hide()
 	$Sprite2.hide()
 	$Particles2D.emitting = true

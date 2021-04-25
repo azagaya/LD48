@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scenes/Hearth.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/HUD.gd" type="Script" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.85098, 0.827451, 0.694118, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.996078, 0.945098, 0.505882, 1 )
+
+[sub_resource type="DynamicFont" id=3]
+
+[node name="HUD" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hearts" type="Node2D" parent="."]
+position = Vector2( 12, 12 )
+
+[node name="Hearth" parent="Hearts" instance=ExtResource( 1 )]
+
+[node name="Hearth2" parent="Hearts" instance=ExtResource( 1 )]
+position = Vector2( 8, 0 )
+
+[node name="Hearth3" parent="Hearts" instance=ExtResource( 1 )]
+position = Vector2( 16, 0 )
+
+[node name="Hearth4" parent="Hearts" instance=ExtResource( 1 )]
+position = Vector2( 24, 0 )
+
+[node name="Hearth5" parent="Hearts" instance=ExtResource( 1 )]
+position = Vector2( 32, 0 )
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+margin_left = 8.0
+margin_top = 16.0
+margin_right = 48.0
+margin_bottom = 24.0
+custom_styles/fg = SubResource( 1 )
+custom_styles/bg = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
+value = 100.0

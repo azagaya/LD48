@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Pixeltype.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Scenes/RichTextLabel.gd" type="Script" id=2]
+[ext_resource path="res://Scenes/EndingScene.gd" type="Script" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+font_data = ExtResource( 1 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 57.0
+margin_top = 18.0
+margin_right = -58.0
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "I finally got to the bottom of the temple. There is no Kulka, its a myth. Now I understand I was tricked. They needed a Sacred Lantern Down Here, to restore the balance, and I was chosen as the one to bring it here. However, the lamp wont last lit forever. Poor the fool who is going to be sent next. At least, he will have this Diary to read... and understand.
+
+[right]Diary of Sedah
+Final Chapter[/right]
+"
+text = "I finally got to the bottom of the temple. There is no Kulka, its a myth. Now I understand I was tricked. They needed a Sacred Lantern Down Here, to restore the balance, and I was chosen as the one to bring it here. However, the lamp wont last lit forever. Poor the fool who is going to be sent next. At least, he will have this Diary to read... and understand.
+
+Diary of Sedah
+Final Chapter
+"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="."]
+modulate = Color( 0.898039, 0.898039, 0.596078, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 225.0
+margin_top = 159.0
+margin_bottom = -1.0
+custom_fonts/normal_font = SubResource( 2 )
+bbcode_enabled = true
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+raw_text = "Continue [ACTION]"

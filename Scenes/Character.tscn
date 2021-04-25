@@ -1,17 +1,47 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Assets/Character.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Character.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Light.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Light-10px-export.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Character_n.png" type="Texture" id=5]
+[ext_resource path="res://Scenes/Character.shader" type="Shader" id=6]
+[ext_resource path="res://Scenes/Camera2D.gd" type="Script" id=7]
+[ext_resource path="res://SFX/step.ogg" type="AudioStream" id=8]
+[ext_resource path="res://SFX/Melee.ogg" type="AudioStream" id=9]
 
-[sub_resource type="CanvasItemMaterial" id=1]
-light_mode = 1
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 6 )
+shader_param/emphasis_color = Color( 1, 1, 1, 1 )
+shader_param/emphasis_amout = 0.0
 
 [sub_resource type="CanvasItemMaterial" id=2]
 blend_mode = 1
 light_mode = 1
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="CanvasItemMaterial" id=3]
+blend_mode = 1
+light_mode = 1
+
+[sub_resource type="Gradient" id=4]
+colors = PoolColorArray( 0.898039, 0.898039, 0.596078, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+emission_shape = 1
+emission_sphere_radius = 8.0
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+gravity = Vector3( 0, -98, 0 )
+initial_velocity = 20.0
+angular_velocity = 720.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+color_ramp = SubResource( 5 )
+
+[sub_resource type="Animation" id=7]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -37,8 +67,60 @@ tracks/1/keys = {
 "update": 1,
 "values": [ Vector2( 9, -16 ), Vector2( -5, -26 ), Vector2( -7, -29 ), Vector2( 14, -26 ), Vector2( 9, -18 ), Vector2( 8, -19 ), Vector2( 10, -18 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite/Particles2D:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.3 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/3/type = "method"
+tracks/3/path = NodePath("Camera2D")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.3 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ null ],
+"method": "shake"
+} ]
+}
+tracks/4/type = "method"
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.3 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "melee"
+} ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("Melee:playing")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.3 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=8]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -64,8 +146,20 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Vector2( 9, -17 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite2:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=9]
 length = 0.7
 loop = true
 tracks/0/type = "value"
@@ -92,8 +186,20 @@ tracks/1/keys = {
 "update": 1,
 "values": [ Vector2( 9, -16 ), Vector2( 9, -17 ), Vector2( 9, -16 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite2:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=10]
 length = 0.8
 loop = true
 tracks/0/type = "value"
@@ -120,21 +226,59 @@ tracks/1/keys = {
 "update": 1,
 "values": [ Vector2( 9, -16 ), Vector2( 8, -18 ), Vector2( 8, -19 ), Vector2( 8, -19 ), Vector2( 9, -15 ), Vector2( 9, -16 ), Vector2( 9, -17 ), Vector2( 9, -17 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("Steps:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.3, 0.7 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, true ]
+}
 
-[sub_resource type="RectangleShape2D" id=7]
+[sub_resource type="RectangleShape2D" id=11]
 extents = Vector2( 11, 3 )
+
+[sub_resource type="Animation" id=12]
+resource_name = "Damage"
+length = 0.1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material:shader_param/emphasis_amout")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0, 0.0 ]
+}
+
+[sub_resource type="CircleShape2D" id=13]
+radius = 10.0499
 
 [node name="Character" type="KinematicBody2D"]
 collision_layer = 2
 script = ExtResource( 2 )
 
+[node name="Sprite2" type="Sprite" parent="."]
+modulate = Color( 0, 0, 0, 1 )
+scale = Vector2( 1.3, 0.6 )
+texture = ExtResource( 4 )
+
 [node name="Sprite" type="Sprite" parent="."]
 material = SubResource( 1 )
 texture = ExtResource( 1 )
+normal_map = ExtResource( 5 )
 offset = Vector2( -2, -11 )
 hframes = 8
 vframes = 4
-frame = 16
+frame = 22
 
 [node name="Light2D" type="Light2D" parent="Sprite"]
 position = Vector2( 8, 0 )
@@ -148,18 +292,56 @@ shadow_enabled = true
 modulate = Color( 0.953613, 0.984375, 0, 0.196078 )
 show_behind_parent = true
 material = SubResource( 2 )
-position = Vector2( 9, -16 )
+position = Vector2( 10, -18 )
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 3 )
 
 [node name="ShootPosition" type="Position2D" parent="Sprite"]
 position = Vector2( 10, 0 )
 
+[node name="Particles2D" type="Particles2D" parent="Sprite"]
+material = SubResource( 3 )
+position = Vector2( 6, 1 )
+emitting = false
+amount = 20
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.72
+process_material = SubResource( 6 )
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Attack = SubResource( 3 )
-anims/Death = SubResource( 4 )
-anims/Idle = SubResource( 5 )
-anims/Walk = SubResource( 6 )
+anims/Attack = SubResource( 7 )
+anims/Death = SubResource( 8 )
+anims/Idle = SubResource( 9 )
+anims/Walk = SubResource( 10 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 7 )
+visible = false
+shape = SubResource( 11 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+script = ExtResource( 7 )
+
+[node name="EmphasisAnimator" type="AnimationPlayer" parent="."]
+anims/Damage = SubResource( 12 )
+
+[node name="MeleeHitBox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MeleeHitBox"]
+position = Vector2( 6, 0 )
+shape = SubResource( 13 )
+
+[node name="LightFuel" type="Timer" parent="."]
+wait_time = 30.0
+one_shot = true
+
+[node name="Steps" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 8 )
+
+[node name="Melee" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 9 )
+
+[connection signal="timeout" from="LightFuel" to="." method="_on_LightFuel_timeout"]

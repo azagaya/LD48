@@ -7,8 +7,6 @@ export var speed := 35.0
 
 onready var state_animation := $StateAnimation
 
-func _ready():
-	pass
 
 func _physics_process(delta):
 	if target != null:
@@ -24,6 +22,7 @@ func take_damage(damage : float, dealer = null):
 	health -= damage
 	$EmphasisAnimation.play("Damaged")
 	if health <= 0:
+		Events.emit_signal("enemy_died")
 		queue_free()
 
 

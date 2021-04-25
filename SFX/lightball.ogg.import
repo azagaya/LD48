@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/lightball.ogg-ce19bd1312b672ded1f109ec872db132.oggstr"
+
+[deps]
+
+source_file="res://SFX/lightball.ogg"
+dest_files=[ "res://.import/lightball.ogg-ce19bd1312b672ded1f109ec872db132.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0
