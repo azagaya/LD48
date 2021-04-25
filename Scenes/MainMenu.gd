@@ -11,4 +11,5 @@ func _on_Button2_pressed():
 
 
 func _on_Button_pressed():
+	MainSongManager.play()
 	get_tree().change_scene("res://Scenes/Levels/Level1.tscn")

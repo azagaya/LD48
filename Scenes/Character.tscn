@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Assets/Character.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Character.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Scenes/Camera2D.gd" type="Script" id=7]
 [ext_resource path="res://SFX/step.ogg" type="AudioStream" id=8]
 [ext_resource path="res://SFX/Melee.ogg" type="AudioStream" id=9]
+[ext_resource path="res://SFX/damaged.ogg" type="AudioStream" id=10]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 6 )
@@ -258,6 +259,18 @@ tracks/0/keys = {
 "update": 0,
 "values": [ 0.0, 1.0, 0.0 ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath("Moan:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
 [sub_resource type="CircleShape2D" id=13]
 radius = 10.0499
@@ -340,8 +353,14 @@ one_shot = true
 
 [node name="Steps" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 8 )
+volume_db = -6.0
+bus = "SFX"
 
 [node name="Melee" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 9 )
+bus = "SFX"
+
+[node name="Moan" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 10 )
 
 [connection signal="timeout" from="LightFuel" to="." method="_on_LightFuel_timeout"]

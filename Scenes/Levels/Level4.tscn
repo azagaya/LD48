@@ -82,6 +82,3 @@ color = Color( 0.196078, 0.196078, 0.196078, 1 )
 intro = "I started to notice the beauty of the Sacred Lantern. Sometimes, I realize i've been staring to it losing the track of time. Perhaps it is related to the fact that the temple is getting darker in this levels.
 [right]Diary of Sedha
 Chapter 4[/right]"
-
-[connection signal="next_level" from="Floor/Stairs" to="." method="next_level"]
-[connection signal="health_changed" from="YSort/Character" to="CanvasLayer/HUD" method="health_changed"]

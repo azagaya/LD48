@@ -79,7 +79,5 @@ visible = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EndingArea" index="1"]
 shape = SubResource( 1 )
 
-[connection signal="next_level" from="Floor/Stairs" to="." method="next_level"]
-[connection signal="health_changed" from="YSort/Character" to="CanvasLayer/HUD" method="health_changed"]
 [connection signal="body_entered" from="EndingArea" to="EndingArea" method="_on_EndingArea_body_entered"]
 [connection signal="body_exited" from="EndingArea" to="EndingArea" method="_on_EndingArea_body_exited"]

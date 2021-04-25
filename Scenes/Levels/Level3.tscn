@@ -68,6 +68,3 @@ Hopefully, when I finally meet the Kulka, she will help me get out.
 
 [right]Diary of Sedah
 Chapter 3[/right]"
-
-[connection signal="next_level" from="Floor/Stairs" to="." method="next_level"]
-[connection signal="health_changed" from="YSort/Character" to="CanvasLayer/HUD" method="health_changed"]
